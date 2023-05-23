@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -18,22 +19,27 @@
         }
     </script>
     <?php
-        echo '<button class="submitcheckbox">DarkMode';
-        echo '<label class="switch">
-                <input type="checkbox" id="checkbox" onclick="darkMode()">
-                <span class="slider round"></span>
-            </label></button>';
+        if(isset($_COOKIE['utente']))
+        $_SESSION['utente'] = $_COOKIE['utente'];
 
-        echo '<a href="registrati.php"><button class="submit">Registrati</button></a>';
-        echo '<a href="accedi.php"><button class="submit">Accedi</button></a><br><br>';
-        ?>
+        if($_SESSION['utente'] != "")
+        {
+            echo '<button class="submitcheckbox">DarkMode';
+            echo '<label class="switch">
+                    <input type="checkbox" id="checkbox" onclick="darkMode()">
+                    <span class="slider round"></span>
+                </label></button>';
+
+            echo '<a href="carrello.php"><img class="shopcart" src="png/carrello.jpg" alt="Carrello"></a>';
+            echo '<a href="esci.php"><button class="submit">Esci</button></a>';
+            echo '<a href="elimina.php"><button class="submit">Elimina Account</button></a><br><br>';
+            ?>
             <script>
                 if (getCookie('darkmode') == 1) document.getElementById("checkbox").checked = true;
             </script>
-        <?php
-
-        if(!isset($_COOKIE["utente"])){
-        $connessione = "mysql:host=localhost;dbname=archivio";
+            <?php
+        
+            $connessione = "mysql:host=localhost;dbname=archivio";
 
             try {
                 $pdo = new PDO($connessione, 'root', '');
@@ -52,24 +58,25 @@
                         echo "Non ci sono articoli";
                     } else {
                         echo '<table class="table">
-                                    <tr><th>Articoli</th></tr>
+                                    <tr><th>ARTICOLI</th></tr>
 
                                     <tr>
                                     <td>
                                         <table>
-                                        <tr><th>Nome</th><th>Prezzo</th><th>Venditore</th></tr>';
+                                        <tr><th>Nome</th><th>Prezzo</th><th>Venditore</th><th>Azioni</th></tr>';
                                             $ris = $statement->fetchAll(PDO::FETCH_ASSOC);
                                             foreach ($ris as $r) {
                                                 echo '<tr class="row">';
                                                 echo '<td>' . $r['Nome'] . '</td>
                                                                     <td>' . $r['Prezzo'] . ' €' . '</td>
-                                                                    <td>' . $r['NomeVenditore'] ." ". $r['CognomeVenditore'] . '</td>';                                                         
+                                                                    <td>' . $r['NomeVenditore'] ." ". $r['CognomeVenditore'] . '</td>
+                                                                    <td>' . '<a href="ordina.php?IdProdotto=' . $r['ProdId'] . '&IdVenditore=' . $r['VendId'] . '"><button>Ordina</button></a>' . '</td>';
                                                 echo '</tr>';
                                             }
 
                         echo            '</table>
                                     </td>
-                                    </tr>
+                                    </tr>                         
                                 </table>';
                     }
                 }
@@ -78,7 +85,7 @@
                 ?><h2><?php echo $err->getMessage(); ?></h2><?php
             }
         }else{
-            header("location: home.php");
+            header("location: index.php");
         }
     ?>
 </body>
