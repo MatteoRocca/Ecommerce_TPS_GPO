@@ -1,5 +1,5 @@
 # Ecommerce_TPS_GPO
-Scaricare i moduli node, non sono compresi qui per motivi di dimensione
+Scaricare i moduli node, non sono compresi qui per motivi di dimensione (express, mysql)
 
 / -> Rotta base di benvenuto
 
